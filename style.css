@@ -1129,3 +1129,55 @@ ul { list-style: none; }
     margin: 0 auto;
   }
 }
+
+
+/* ============================================
+   COMING SOON BADGE + STATEMENT TITLE
+   ============================================ */
+.coming-soon-badge {
+  position: absolute;
+  top: 34px;
+  right: clamp(18px, 6vw, 90px);
+  z-index: 3;
+  width: clamp(150px, 18vw, 260px);
+  height: auto;
+  transform: rotate(6deg);
+  filter: drop-shadow(0 18px 30px rgba(0,0,0,0.46));
+  pointer-events: none;
+}
+
+.statement-eyebrow {
+  color: var(--teal);
+}
+
+.statement-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6vw, 5.2rem);
+  line-height: 0.95;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+  color: var(--white);
+  margin: 0 0 24px;
+}
+
+.statement-title em {
+  color: var(--gold-light);
+  font-style: normal;
+}
+
+@media (max-width: 900px) {
+  .coming-soon-badge {
+    top: 18px;
+    right: 14px;
+    width: clamp(120px, 34vw, 180px);
+    transform: rotate(4deg);
+  }
+
+  .statement-title {
+    text-align: center;
+  }
+
+  .statement-eyebrow {
+    text-align: center;
+  }
+}

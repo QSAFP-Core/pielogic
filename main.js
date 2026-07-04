@@ -13,50 +13,54 @@
     });
   }
 
-  const slideshow = document.querySelector('.slideshow-section');
-  if (!slideshow) return;
+  const slideshows = Array.from(document.querySelectorAll('.slideshow-section'));
 
-  const slides = Array.from(slideshow.querySelectorAll('.slideshow-slide'));
-  const dotsWrap = slideshow.querySelector('.slideshow-dots');
-  const intervalMs = Number(slideshow.dataset.slideInterval || 5000);
+  slideshows.forEach((slideshow) => {
+    const slides = Array.from(slideshow.querySelectorAll('.slideshow-slide'));
+    const dotsWrap = slideshow.querySelector('.slideshow-dots');
+    const intervalMs = Number(slideshow.dataset.slideInterval || 5000);
 
-  if (!slides.length || !dotsWrap) return;
+    if (!slides.length || !dotsWrap) return;
 
-  let current = slides.findIndex((slide) => slide.classList.contains('is-active'));
-  if (current < 0) current = 0;
-  let timer = null;
+    // Clear any existing dots before rebuilding. This keeps GitHub/browser cache refreshes clean.
+    dotsWrap.innerHTML = '';
 
-  const dots = slides.map((_, index) => {
-    const dot = document.createElement('button');
-    dot.type = 'button';
-    dot.className = 'slideshow-dot';
-    dot.setAttribute('aria-label', `Show slide ${index + 1}`);
-    dot.addEventListener('click', () => showSlide(index, true));
-    dotsWrap.appendChild(dot);
-    return dot;
-  });
+    let current = slides.findIndex((slide) => slide.classList.contains('is-active'));
+    if (current < 0) current = 0;
+    let timer = null;
 
-  function showSlide(index, restartTimer) {
-    current = (index + slides.length) % slides.length;
-    slides.forEach((slide, slideIndex) => {
-      slide.classList.toggle('is-active', slideIndex === current);
+    const dots = slides.map((_, index) => {
+      const dot = document.createElement('button');
+      dot.type = 'button';
+      dot.className = 'slideshow-dot';
+      dot.setAttribute('aria-label', `Show slide ${index + 1}`);
+      dot.addEventListener('click', () => showSlide(index, true));
+      dotsWrap.appendChild(dot);
+      return dot;
     });
-    dots.forEach((dot, dotIndex) => {
-      dot.classList.toggle('is-active', dotIndex === current);
-    });
-    if (restartTimer) startTimer();
-  }
 
-  function startTimer() {
-    window.clearInterval(timer);
-    if (slides.length > 1) {
-      timer = window.setInterval(() => showSlide(current + 1, false), intervalMs);
+    function showSlide(index, restartTimer) {
+      current = (index + slides.length) % slides.length;
+      slides.forEach((slide, slideIndex) => {
+        slide.classList.toggle('is-active', slideIndex === current);
+      });
+      dots.forEach((dot, dotIndex) => {
+        dot.classList.toggle('is-active', dotIndex === current);
+      });
+      if (restartTimer) startTimer();
     }
-  }
 
-  slideshow.addEventListener('mouseenter', () => window.clearInterval(timer));
-  slideshow.addEventListener('mouseleave', startTimer);
+    function startTimer() {
+      window.clearInterval(timer);
+      if (slides.length > 1) {
+        timer = window.setInterval(() => showSlide(current + 1, false), intervalMs);
+      }
+    }
 
-  showSlide(current, false);
-  startTimer();
+    slideshow.addEventListener('mouseenter', () => window.clearInterval(timer));
+    slideshow.addEventListener('mouseleave', startTimer);
+
+    showSlide(current, false);
+    startTimer();
+  });
 })();
